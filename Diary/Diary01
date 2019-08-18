@@ -1,2 +1,56 @@
 2019年8月18日22:34:35
-一、
+
+一、equal()和==的区别
+    参考地址：https://www.runoob.com/java/java-string-intern.html
+    1、前景介绍：
+       1）、
+            ①String a="abc";
+            ②String a=new String("abc")
+
+       2）、  ①和②的区别在于：
+                         前者创建的是一个字符串缓冲区
+                         后者创建的是内存的栈空间
+
+    2、common response
+        1）equal()方法比较的是两者的数值
+            eg：
+                String str1="ab";
+                String str2=new String("ab");
+                System.out.println(str1.equals(str2))
+                res:true
+        2）==比较的是两者的引用地址
+            eg：
+                String str1="ab";
+                String str2=new String("ab");
+                System.out.println(str1==str2)
+                res:false
+    3、deeper
+        1）加入函数：intern()   --->返回字符串的规范化
+           (会验证所调用变量是否存在于字符串缓冲区中，有则返回对应地址，没有则在缓冲区创建一个地址并返回)
+        2）在==比较时,其中一方加入了intern()函数,而发生的变化
+            eg：
+                String str1="ab";
+                String str2=new String("ab");
+                System.out.println(str2.intern()==str1)
+                res:true
+            explain:str1.intern()之后会去字符串缓冲区查找是否有一样的值，
+                                因为str1在str2早一行，所以已经实例化进入字符串缓冲区里了，
+                                那么str2.intern()就返回了str1一样的引用地址，
+                                所以，自然地两者==的结果就是true了
+        3）在equals()比较时，其中一方加入了intern()函数，同时另一方加入变量引用，而发生的变化
+            eg：
+                String a="a";
+                String b="b";
+                String str1=a+b;
+                String str2=new String("ab");
+                System.out.println(str2.intern()==str1)
+                res:false
+            explain:在3、2)的基础之上，区别是str1附入的值是由变量拼接而来，
+                    正因为变量原因字符串缓冲区的内容如下：
+                        a-->"a"
+                        b-->"b"
+                    所以str2.intern()在缓冲区返回了"ab"之后，还找不到能匹配的
+
+
+
+
